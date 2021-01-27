@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const LineSchema = new Schema({
    
-    productId:{
-        type:String,
-        required:true
-    },
+   
         price:{
             type:Number,
             required:true
@@ -44,8 +41,7 @@ const customerSchema = new Schema({
         type:String,
         required:true
     },
-    Line_items:[LineSchema]
-    
+    Line_items:[LineSchema]   
     
 
 

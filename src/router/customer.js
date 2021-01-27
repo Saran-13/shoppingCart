@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const Customer = require('../model/customer');
-const AddProduct = require('../model/get_a_product');
 
 
+// // Add new products
 router.post('/', async (req, res) => {
 	console.log('Users route');
 	const newCustomers = new Customer(req.body);
@@ -17,38 +17,19 @@ router.post('/', async (req, res) => {
 	}
 });
 
-// Add new products
-router.post('/:cid', async (req, res) => {
-	const neworder = new AddProduct(req.body);
-	const customerId = req.customer_id;
-	const product_id = req.productId;
 
-	try {
-		const customer = await Customer.find(customerId);
-		if (!customer) {
-			return res.status(404).send({ error: 'customer not found' });
-		}
-		const product = await AddProduct.find(product_id );
-		if (!product) {
-			return res.status(404).send({ error: 'Post not found' });
-		}
-		neworder.product_id  = product.id;
-		
-		await neworder.save();
-		
-		res.status(201).send(neworder);
-	} catch (err) {
-		
-		res.status(500).send();
-	}
-});
 
-// Get  details using customer_id.
+
+
+// // Get  details using customer_id.
 
 router.get('/:cid', async (req, res) => {
 	
 	try {
-		const order = await Customer.find(req.customer_id);
+		const order = await Customer.find({customer_id:"C002"});
+		
+			
+		
 		if (!order) {
 			return res.status(404).send({ error: 'customer not found' });
 		}
@@ -58,7 +39,7 @@ router.get('/:cid', async (req, res) => {
 	}
 });
 
-// Get  details using order_id.
+// // Get  details using order_id.
 router.get('/:id', async (req, res) => {
 	
 	try {
@@ -72,7 +53,7 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-// update quantity using orderid and productid
+// // update quantity using orderid and productid
 
 router.patch('/:id/:pid', async (req, res) => {
 	const updates = Object.keys(req.body);
@@ -94,7 +75,7 @@ router.patch('/:id/:pid', async (req, res) => {
 			return res.status(404).send({ error: 'customer not found' });
 		}
 
-		const quantity = await AddProduct.findById(product_id);
+		const quantity = await Customer.findById(product_id);
 			
 		if (!quantity) {
 			return res.status(404).send({ error: 'User not found' });
@@ -112,20 +93,24 @@ router.patch('/:id/:pid', async (req, res) => {
 
 
 
-// delete a product 
+// // delete a product 
 router.delete('/:id/delete/:pid', async (req, res) => {
-	const customerId = req.customer_id;
+	const customerId = req.params.id;
 	const product_id = req.params.pid;
 	try {
-		const customer = await Customer.find(customerId);
+		const customer = await Customer.findById(customerId);
+		console.log(customer);
 		if (!customer) {
+			
 			return res.status(404).send({ error: 'customer not found' });
 		}
-		const product = await AddProduct.findByIdAndDelete(product_id);
+		// const product = await Customer.findByIdAndDelete(Customer.findById(product_id));
+		const product = await Customer.remove(req.params.pid);
+		console.log(product);
 		if (!product) {
 			return res.status(404).send({ error: 'product not found' });
 		}
-		res.send(product);
+		res.send(customer);
 		
 	} catch (error) {
 		res.status(500).send({ error: 'Internal server error' });
