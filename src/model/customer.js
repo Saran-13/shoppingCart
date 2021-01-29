@@ -4,7 +4,7 @@ const LineSchema = new Schema({
    
    
         price:{
-            type:Number,
+            type:String,
             required:true
         },
         quantity:{
@@ -14,11 +14,11 @@ const LineSchema = new Schema({
         tax_lines:{
             type:Array,
             price:{
-            type:Number,
+            type:String,
             required:true
         },
         rate:{
-            type:Number,
+            type:String,
             required:true
         },
         title:{
@@ -41,7 +41,10 @@ const customerSchema = new Schema({
         type:String,
         required:true
     },
-    Line_items:[LineSchema]   
+    Line_items:{
+       type: [LineSchema],
+       default: []
+    }
     
 
 
