@@ -17,7 +17,38 @@ router.post('/', async (req, res) => {
 	}
 });
 
-
+router.get('/products/:cid', async (req, res) => {
+	
+	try {
+		const order = await Customer.find(req.params.customer_id);
+		if (!order) {
+			return res.status(404).send({ error: 'customer not found' });
+		}
+		const lists = JSON.parse(order);
+		console.log(lists);
+		lists["Line_items"].push({price:59.8, 
+			quantity:5,
+			 tax_lines:
+			 
+				   [  
+					      {
+					 
+						 price:59.8,
+						 rate:0.06,
+						 title:"salestax",
+				       }	
+					]
+				
+				
+		});
+			
+	res.send(order);
+		
+	} catch (error) {
+        res.status(500).send({ error: 'Internal server error' });
+       
+	}
+});
 
 
 
@@ -26,7 +57,7 @@ router.post('/', async (req, res) => {
 router.get('/:cid', async (req, res) => {
 	
 	try {
-		const order = await Customer.find({customer_id:"C002"});
+		const order = await Customer.find({customer_id:req.params.customer_id});
 		
 			
 		
