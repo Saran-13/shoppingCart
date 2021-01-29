@@ -4,16 +4,33 @@ const router = express.Router();
 const Customer = require('../model/customer');
 
 
-// // Add new products
+// add customer
 router.post('/', async (req, res) => {
-	console.log('Users route');
-	const newCustomers = new Customer(req.body);
 	try {
-		await newCustomers.save();
-		res.status(201).send(newCustomers);
-	} catch (err) {
-		
+		const customer = new Customer(req.body);
+		console.log(customer);
+		await customer.save();
+		res.status(201).send(customer);
+	} catch (error) {
 		res.status(500).send();
+	}
+});
+
+// // Add new products
+router.post('/:cid', async (req, res) => {
+	try {
+		const customer = await Customer.findOne({ customer_id: req.params.cid });
+		if (!customer) {
+			res.status(404).send({ err: 'Customer not found' });
+		}
+		const newProduct = req.body;
+		console.log(newProduct);
+		console.log(typeof customer.Line_items);
+		customer.line_items.push(newProduct);
+		customer.save();
+		res.status(200).send(customer);
+	} catch (err) {
+		res.status(500).send({ err });
 	}
 });
 
